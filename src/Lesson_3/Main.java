@@ -58,9 +58,7 @@ public class Main {
             }
         }
 
-
         // 3
-
         final int EXIT_NUMBER = -1;
         int page = EXIT_NUMBER;
         final String fileName1 = "src/Lesson_3/test.txt";
@@ -76,12 +74,21 @@ public class Main {
 
                 page = scanner.nextInt();
 
-                if (page > 0 && page <= MAX_PAGE) {
+                if (page > 0 && page <= MAX_PAGE + 1) {
                     final int seekPosition = (page - 1) * PAGE_SIZE;
                     raf.seek(seekPosition);
-                    raf.read(buffer);
+                    final int readCount = raf.read(buffer);
+
+                    byte[] data = new byte[readCount];
+
+                    if (page == MAX_PAGE + 1) {
+                        System.arraycopy(buffer, 0, data, 0, readCount);
+                    } else {
+                        data = buffer;
+                    }
+
                     System.out.println("page = " + page);
-                    System.out.println(new String(buffer));
+                    System.out.println(new String(data));
                     System.out.println("----------------------");
                 }
             } while (page > EXIT_NUMBER);
