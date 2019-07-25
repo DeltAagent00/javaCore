@@ -17,10 +17,13 @@ public class MainClass {
                 while (!race.isAllReady()) {
                     race.wait();
                 }
+                race.setCanStart();
                 System.out.println("ВАЖНОЕ ОБЪЯВЛЕНИЕ >>> Гонка началась!!!");
-//            while (!race.isAllFinish()) {
-//                System.out.println("ВАЖНОЕ ОБЪЯВЛЕНИЕ >>> Гонка закончилась!!!");
-//            }
+
+                while (!race.isAllFinish()) {
+                    race.wait();
+                }
+                System.out.println("ВАЖНОЕ ОБЪЯВЛЕНИЕ >>> Гонка закончилась!!!");
             } catch (Exception e) {
                 e.printStackTrace();
             }

@@ -33,7 +33,10 @@ public class Car implements Runnable {
         try {
             synchronized (race) {
                 race.setReady();
-                race.wait();
+
+                if (!race.isCanStart()) {
+                    race.wait();
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -41,6 +44,18 @@ public class Car implements Runnable {
 
         for (int i = 0; i < race.getStages().size(); i++) {
             race.getStages().get(i).go(this);
+        }
+
+        try {
+            synchronized (race) {
+                race.setFinish();
+
+                if (!race.isAllFinish()) {
+                    race.wait();
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 }

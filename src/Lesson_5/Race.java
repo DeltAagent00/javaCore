@@ -6,6 +6,7 @@ import java.util.Arrays;
 public class Race {
     private int countReady = 0;
     private int countFinish = 0;
+    private boolean canStart = false;
     private final int COUNT_CARS;
     private ArrayList<Stage> stages;
     public ArrayList<Stage> getStages() { return stages; }
@@ -17,9 +18,22 @@ public class Race {
     synchronized void setReady() {
         countReady++;
 
+        checkStartStage();
+    }
+
+    synchronized void checkStartStage() {
         if (isAllReady()) {
             notifyAll();
         }
+    }
+
+    synchronized boolean isCanStart() {
+        return canStart;
+    }
+
+    synchronized void setCanStart() {
+        canStart = true;
+        notifyAll();
     }
 
     synchronized void setFinish() {
