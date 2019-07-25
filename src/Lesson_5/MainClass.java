@@ -17,8 +17,8 @@ public class MainClass {
                 while (!race.isAllReady()) {
                     race.wait();
                 }
-                race.setCanStart();
                 System.out.println("ВАЖНОЕ ОБЪЯВЛЕНИЕ >>> Гонка началась!!!");
+                race.setCanStart();
 
                 while (!race.isAllFinish()) {
                     race.wait();

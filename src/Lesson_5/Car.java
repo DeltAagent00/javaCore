@@ -42,12 +42,45 @@ public class Car implements Runnable {
             e.printStackTrace();
         }
 
-        for (int i = 0; i < race.getStages().size(); i++) {
-            race.getStages().get(i).go(this);
+        try {
+            synchronized (race) {
+                while (!race.isCanStart()) {
+                    race.wait();
+                }
+            }
+        } catch(Exception e){
+            e.printStackTrace();
         }
+
+        for (int i = 0; i < race.getStages().size(); i++) {
+            final Stage stage = race.getStages().get(i);
+            final boolean isTunnel = stage instanceof Tunnel;
+            if (isTunnel) {
+                try {
+                    synchronized (race) {
+                        while(!race.canGoTunnel()) {
+                            race.wait();
+                        }
+                    }
+                } catch(Exception e){
+                    e.printStackTrace();
+                }
+
+                race.setInTunnel();
+            }
+
+            stage.go(this);
+            if (isTunnel) {
+                race.outFromTunnel();
+            }
+        }
+
 
         try {
             synchronized (race) {
+                if (race.isFirstFinish()) {
+                    System.out.println(this.name + " WIN");
+                }
                 race.setFinish();
 
                 if (!race.isAllFinish()) {
